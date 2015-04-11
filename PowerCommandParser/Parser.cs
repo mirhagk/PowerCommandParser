@@ -25,6 +25,7 @@ namespace PowerCommandParser
             var properties = typeof(T).GetProperties();
             int positionArg = 0;
             List<int> positionalArguments = null;
+            var requiredArguments = properties.Where(p => p.GetCustomAttributes(false).Any(a => a is RequiredAttribute)).ToList();
             for(int i = 0; i < args.Length; i++)
             {
                 if (args[i].StartsWith("--"))
@@ -38,6 +39,8 @@ namespace PowerCommandParser
                         return null;
                     }
                     property.SetValue(result, true);
+
+                    providedArguments.Add(switchName);
                 }
                 else if (args[i].StartsWith("-"))
                 {
@@ -56,10 +59,21 @@ namespace PowerCommandParser
                         return null;
                     }
                     property.SetValue(result, args[++i]);
+
+                    providedArguments.Add(paramName);
                 }
                 else
                 {
 
+                }
+            }
+            foreach(var required in requiredArguments)
+            {
+                if (!providedArguments.Any(a => a.Equals(required.Name, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    if (outputErrors)
+                        Console.Error.WriteLine($"No argument provided for required parameter ${required.Name}");
+                    return null;
                 }
             }
             return result;
