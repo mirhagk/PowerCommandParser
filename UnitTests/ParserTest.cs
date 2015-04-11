@@ -36,13 +36,13 @@ namespace UnitTests
         [TestMethod]
         public void DoesntCrashWithInvalidFormat()
         {
-            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("deaw deaw dq323 f42qfaw")));
-            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--activ ate -name mirhagk")));
-            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--activate -name")));
-            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("activate --name")));
-            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-name \"nathan jervis")));
-            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-firstname --activate")));
-            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--name --activate")));
+            Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("deaw deaw dq323 f42qfaw")));
+            Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--activ ate -name mirhagk")));
+            Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--activate -name")));
+            Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("activate --name")));
+            Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-name \"nathan jervis")));
+            Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-firstname --activate")));
+            Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--name --activate")));
         }
         class FormatExportOptions
         {
@@ -71,9 +71,18 @@ namespace UnitTests
                 Assert.AreEqual("output.txt", opt.Output);
             };
             assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt -Output output.txt")));
+            assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt -Format html output.txt")));
             assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Output output.txt input.txt")));
             assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Input input.txt output.txt")));
             assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Input input.txt -Output output.txt")));
+        }
+        [TestMethod]
+        public void EnsuresRequired()
+        {
+            Assert.IsNull(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("")));
+            Assert.IsNull(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt")));
+            Assert.IsNull(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt -Format txt")));
+            Assert.IsNull(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Input input.txt")));
         }
     }
 }
