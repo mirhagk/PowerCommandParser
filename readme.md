@@ -76,3 +76,53 @@ namespace Example
 
 ```
 
+Notes
+---
+
++ The parser only looks at public properties. If you require something different please submit an issue so it can be discussed
++ The names are case insensitive (just like powershell)
++ To use default arguments simply assign the default values in the constructor (or just inline).
+
+Switches
+--- 
+
+As well as parameters `-Name Value` you can also use switches `--enabled`. Switches are defined in code as simply booleans. Once you have a boolean you can use it as either `--enabled` or `-enabled true`/`-enabled false`
+
+Advanced Usage
+---
+
+Besides just the very simple usage, the library also supports some additional features, such as specifying arguments as required, and using positional arguments.
+
+###Required
+
+A required argument is simply marked with the `[Required]` attribute like so
+
+```
+class Settings
+{
+	[Required]
+	public string Input{get;set;}
+	[Required]
+	public string Output{get;set;}
+	public string Format{get;set;}
+}
+```
+
+The library will make sure the marked fields are set
+
+###Position
+
+To use positional arguments (like `myapp.exe input.txt output.txt`) simply use the `[Position(number)]` attribute
+
+```
+class Settings
+{
+	[Position(1)]
+	[Required]
+	public string Input{get;set;}
+	[Position(1)]
+	[Required]
+	public string Output{get;set;}
+	public string Format{get;set;}
+}
+```
