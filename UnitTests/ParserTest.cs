@@ -33,5 +33,16 @@ namespace UnitTests
             Assert.AreEqual(true, options.Activate);
             Assert.AreEqual("mirhagk", options.Name);
         }
+        [TestMethod]
+        public void DoesntCrashWithInvalidFormat()
+        {
+            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("deaw deaw dq323 f42qfaw")));
+            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--activ ate -name mirhagk")));
+            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--activate -name")));
+            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("activate --name")));
+            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-name \"nathan jervis")));
+            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-firstname --activate")));
+            Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--name --activate")));
+        }
     }
 }
