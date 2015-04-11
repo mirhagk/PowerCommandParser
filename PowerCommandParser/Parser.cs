@@ -45,6 +45,7 @@ namespace PowerCommandParser
                     property.SetValue(result, true);
 
                     providedArguments.Add(switchName);
+                    positionalArguments.RemoveAll(r => r.Name == property.Name);
                 }
                 else if (args[i].StartsWith("-"))
                 {
@@ -65,6 +66,7 @@ namespace PowerCommandParser
                     property.SetValue(result, args[++i]);
 
                     providedArguments.Add(paramName);
+                    positionalArguments.RemoveAll(r => r.Name == property.Name);
                 }
                 else
                 {
