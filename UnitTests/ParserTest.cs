@@ -20,7 +20,7 @@ namespace UnitTests
         {
             var cmdLineRegex = new Regex(@"(?:[^""\s]\S*)|(?:""[^""]*"")");
             List<string> pieces = new List<string>();
-            foreach(Match match in cmdLineRegex.Matches(input))
+            foreach (Match match in cmdLineRegex.Matches(input))
             {
                 pieces.Add(match.Value);
             }
@@ -43,6 +43,37 @@ namespace UnitTests
             Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-name \"nathan jervis")));
             Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-firstname --activate")));
             Assert.AreEqual(null, Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--name --activate")));
+        }
+        class FormatExportOptions
+        {
+            [Required]
+            [Position(1)]
+            public string Input { get; set; }
+            [Required]
+            [Position(2)]
+            public string Output { get; set; }
+            public string Format { get; set; }
+        }
+        [TestMethod]
+        public void BasicPositionalArguments()
+        {
+            var options = Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt output.txt"));
+
+            Assert.AreEqual("input.txt", options.Input);
+            Assert.AreEqual("output.txt", options.Output);
+        }
+        [TestMethod]
+        public void AdvancedPositionalArguments()
+        {
+            Action<FormatExportOptions> assert = (opt) =>
+            {
+                Assert.AreEqual("input.txt", opt.Input);
+                Assert.AreEqual("output.txt", opt.Output);
+            };
+            assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt -Output output.txt")));
+            assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Output output.txt input.txt")));
+            assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Input input.txt output.txt")));
+            assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Input input.txt -Output output.txt")));
         }
     }
 }

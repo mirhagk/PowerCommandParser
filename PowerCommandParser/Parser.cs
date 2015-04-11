@@ -8,6 +8,14 @@ using System.Threading.Tasks;
 namespace PowerCommandParser
 {
     public class RequiredAttribute : Attribute { }
+    public class PositionAttribute : Attribute
+    {
+        public int Position { get; set; }
+        public PositionAttribute(int position)
+        {
+            Position = position;
+        }
+    }
     public class Parser
     {
         public static T ParseArguments<T>(string[] args, bool outputErrors = true) where T :class, new()
@@ -16,6 +24,7 @@ namespace PowerCommandParser
             HashSet<string> providedArguments = new HashSet<string>();
             var properties = typeof(T).GetProperties();
             int positionArg = 0;
+            List<int> positionalArguments = null;
             for(int i = 0; i < args.Length; i++)
             {
                 if (args[i].StartsWith("--"))
