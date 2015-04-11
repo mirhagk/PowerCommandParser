@@ -74,6 +74,11 @@ namespace PowerCommandParser
                             Console.Error.WriteLine($"No positional argument found to accept value {args[i]}");
                         return null;
                     }
+                    var property = positionalArguments.First();
+                    property.SetValue(result, args[i]);
+                    positionalArguments.RemoveAt(0);
+
+                    providedArguments.Add(property.Name);
                 }
             }
             foreach(var required in requiredArguments)
