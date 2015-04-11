@@ -23,8 +23,12 @@ namespace PowerCommandParser
             T result = new T();
             HashSet<string> providedArguments = new HashSet<string>();
             var properties = typeof(T).GetProperties();
-            int positionArg = 0;
-            List<int> positionalArguments = null;
+            var positionalArguments =
+                properties
+                .Where(p => p.GetCustomAttributes(false).Any(a => a is PositionAttribute))
+                .OrderBy(p => (p.GetCustomAttributes(false).Single(a => a is PositionAttribute) as PositionAttribute).Position)
+                .ToList();
+
             var requiredArguments = properties.Where(p => p.GetCustomAttributes(false).Any(a => a is RequiredAttribute)).ToList();
             for(int i = 0; i < args.Length; i++)
             {
@@ -64,7 +68,12 @@ namespace PowerCommandParser
                 }
                 else
                 {
-
+                    if (!positionalArguments.Any())
+                    {
+                        if (outputErrors)
+                            Console.Error.WriteLine($"No positional argument found to accept value {args[i]}");
+                        return null;
+                    }
                 }
             }
             foreach(var required in requiredArguments)
