@@ -6,7 +6,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://github.com/mirhagk/PowerCommandParser/blob/master/LICENSE.txt</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/mirhagk/PowerCommandParser/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/mirhagk/PowerCommandParser/</projectUrl>
     <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
