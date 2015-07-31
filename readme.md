@@ -3,7 +3,7 @@ PowerCommandParser
 
 PowerCommandParser is a library that provides a way to easily parse command line arguments with the same syntax as powershell scripts.
 
-There are several .NET libaries that provide an easy way to parse command line arguments, unfortunately most of them use unix conventions. This works for some projects, and is even an arguably better syntax, but is unfamiliar potentially unfamiliar to those who work with windows, as powershell provides a different syntax.
+There are several .NET libaries that provide an easy way to parse command line arguments, unfortunately most of them use unix conventions. This works for some projects, and is even an arguably better syntax, but is potentially unfamiliar to those who work with windows, as powershell provides a different syntax.
 
 This library is meant to be a no-hassle library. Just import the `nuget` package and use the following:
 
