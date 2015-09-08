@@ -52,6 +52,8 @@ namespace UnitTests
             [Required]
             [Position(2)]
             public string Output { get; set; }
+            [AlternateName("f")]
+            [AlternateName("form")]
             public string Format { get; set; }
         }
         [TestMethod]
@@ -75,6 +77,22 @@ namespace UnitTests
             assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Output output.txt input.txt")));
             assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Input input.txt output.txt")));
             assert(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Input input.txt -Output output.txt")));
+        }
+        [TestMethod]
+        public void AllowsAlternateName()
+        {
+            var opt = Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt output.html -f html "));
+            Assert.AreEqual("input.txt", opt.Input);
+            Assert.AreEqual("output.html", opt.Output);
+            Assert.AreEqual("html", opt.Format);
+        }
+        [TestMethod]
+        public void AllowsMultipleAlternateNames()
+        {
+            var opt = Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt output.html -form html "));
+            Assert.AreEqual("input.txt", opt.Input);
+            Assert.AreEqual("output.html", opt.Output);
+            Assert.AreEqual("html", opt.Format);
         }
         [TestMethod]
         public void EnsuresRequired()

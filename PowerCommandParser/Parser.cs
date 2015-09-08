@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,8 +17,28 @@ namespace PowerCommandParser
             Position = position;
         }
     }
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    public class AlternateNameAttribute : Attribute
+    {
+        public string AlternateName { get; set; }
+        public AlternateNameAttribute(string alternateName)
+        {
+            AlternateName = alternateName;
+        }
+    }
     public class Parser
     {
+        static bool MatchesArgument(PropertyInfo property, string name)
+        {
+            if (property.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                return true;
+            foreach(AlternateNameAttribute altName in property.GetCustomAttributes(typeof(AlternateNameAttribute)))
+            {
+                if (altName.AlternateName.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
         public static T ParseArguments<T>(string[] args, bool outputErrors = true) where T :class, new()
         {
             T result = new T();
@@ -35,7 +56,7 @@ namespace PowerCommandParser
                 if (args[i].StartsWith("--"))
                 {
                     var switchName = args[i].Substring(2);
-                    var property = properties.SingleOrDefault(p => p.Name.Equals(switchName, StringComparison.InvariantCultureIgnoreCase));
+                    var property = properties.SingleOrDefault(p => MatchesArgument(p, switchName));
                     if (property == null || !property.PropertyType.IsAssignableFrom(typeof(bool)))
                     {
                         if (outputErrors)
@@ -56,7 +77,7 @@ namespace PowerCommandParser
                         return null;
                     }
                     var paramName = args[i].Substring(1);
-                    var property = properties.SingleOrDefault(p => p.Name.Equals(paramName, StringComparison.InvariantCultureIgnoreCase));
+                    var property = properties.SingleOrDefault(p => MatchesArgument(p, paramName));
                     if (property == null)
                     {
                         if (outputErrors)
