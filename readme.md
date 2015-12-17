@@ -120,7 +120,7 @@ class Settings
 	[Position(1)]
 	[Required]
 	public string Input{get;set;}
-	[Position(1)]
+	[Position(2)]
 	[Required]
 	public string Output{get;set;}
 	public string Format{get;set;}
