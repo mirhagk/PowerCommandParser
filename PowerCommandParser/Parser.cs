@@ -28,6 +28,13 @@ namespace PowerCommandParser
     }
     public class Parser
     {
+        private static void SetValue(PropertyInfo property, object obj, string value)
+        {
+            if (property.PropertyType.IsAssignableFrom(typeof(string)))
+                property.SetValue(obj,value);
+            else if (property.PropertyType.IsAssignableFrom(typeof(long)))
+                property.SetValue(obj, long.Parse(value));
+        }
         static bool MatchesArgument(PropertyInfo property, string name)
         {
             if (property.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
@@ -84,7 +91,7 @@ namespace PowerCommandParser
                             Console.Error.WriteLine($"No argument named {paramName} was found in the application");
                         return null;
                     }
-                    property.SetValue(result, args[++i]);
+                    SetValue(property, result, args[++i]);
 
                     providedArguments.Add(paramName);
                     positionalArguments.RemoveAll(r => r.Name == property.Name);
