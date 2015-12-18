@@ -102,5 +102,54 @@ namespace UnitTests
             Assert.IsNull(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("input.txt -Format txt")));
             Assert.IsNull(Parser.ParseArguments<FormatExportOptions>(CmdLineEntryParser("-Input input.txt")));
         }
+        public class ComplexTypeSettings
+        {
+            public int NumberOfTrucks { get; set; }
+            public long MaxSize { get; set; }
+            public List<string> TruckNames { get; set; } = new List<string>();
+            public bool IsAConvoy { get; set; }
+            [Flags]
+            public enum ConvoyType
+            {
+                Regular = 0,
+                Great = 1,
+                Big = 2,
+            }
+            public ConvoyType ConvoySize { get; set; } = ConvoyType.Regular;
+            public bool WillPayToll { get; set; } = true;
+        }
+        [TestMethod]
+        public void TestComplexTypeNoList()
+        {
+            var settings = Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-NumberOfTrucks 3 -MaxSize 10 --IsAConvoy"));
+            Assert.AreEqual(3, settings.NumberOfTrucks);
+            Assert.AreEqual(10, settings.NumberOfTrucks);
+            Assert.AreEqual(true, settings.IsAConvoy);
+            Assert.AreEqual(ComplexTypeSettings.ConvoyType.Regular, settings.ConvoySize);
+            Assert.AreEqual(true, settings.WillPayToll);
+            Assert.IsNotNull(settings.TruckNames);
+            Assert.AreEqual(0, settings.TruckNames.Count);
+        }
+        [TestMethod]
+        public void TestComplexTypeAlt()
+        {
+            var settings = Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-NumberOfTrucks 85 -MaxSize 1000 -IsAConvoy true --ConvoySize Great,Big -WillPayToll false"));
+            Assert.AreEqual(85, settings.NumberOfTrucks);
+            Assert.AreEqual(1000, settings.MaxSize);
+            Assert.IsTrue(settings.IsAConvoy);
+            Assert.AreEqual(ComplexTypeSettings.ConvoyType.Big | ComplexTypeSettings.ConvoyType.Regular, settings.ConvoySize);
+            Assert.IsFalse(settings.WillPayToll);
+        }
+        [TestMethod]
+        public void TestList()
+        {
+            var settings = Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-NumberOfTrucks 2 -TruckNames bob,steve"));
+            Assert.IsFalse(settings.IsAConvoy);
+            Assert.AreEqual(2, settings.NumberOfTrucks);
+            Assert.IsNotNull(settings.TruckNames);
+            Assert.AreEqual(2, settings.TruckNames.Count);
+            Assert.AreEqual("bob", settings.TruckNames[0]);
+            Assert.AreEqual("steve", settings.TruckNames[1]);
+        }
     }
 }
