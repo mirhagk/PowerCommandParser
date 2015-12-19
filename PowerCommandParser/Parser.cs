@@ -28,19 +28,41 @@ namespace PowerCommandParser
     }
     public class Parser
     {
-        private static void SetValue(PropertyInfo property, object obj, string value)
+        static T Cast<T>(object value)
+        {
+            return (T)value;
+        }
+        static object DynamicCast(object value,Type type)
+        {
+            MethodInfo castMethod = typeof(Parser).GetMethods(BindingFlags.Static|BindingFlags.NonPublic).Single(f=>f.Name==nameof(Cast)).MakeGenericMethod(type);
+            return castMethod.Invoke(null, new object[] { value });
+        }
+        private static object GetObjectAsType(string value, Type type)
         {
             try
             {
-                property.SetValue(obj, Convert.ChangeType(value, property.PropertyType));
+                return Convert.ChangeType(value, type);
             }
             catch (InvalidCastException)
             {
-                if (property.PropertyType.IsEnum)
-                    property.SetValue(obj, Enum.Parse(property.PropertyType, value));
+                if (type.IsEnum)
+                {
+                    if (value.Contains(","))
+                    {
+                        //Convert all the values to enums and `or` them together
+                        var enumValue = value.Split(',').Select(x => (int)Enum.Parse(type, x)).Aggregate(0, (sum, x) => sum | x);
+                        return DynamicCast(enumValue, type);
+                    }
+                    else
+                        return Enum.Parse(type, value);
+                }
                 else
-                    throw new NotSupportedException($"{value} can't be converted to {property.PropertyType}");
+                    throw new NotSupportedException($"{value} can't be converted to {type}");
             }
+        }
+        private static void SetValue(PropertyInfo property, object obj, string value)
+        {
+            property.SetValue(obj, GetObjectAsType(value, property.PropertyType));
         }
         static bool MatchesArgument(PropertyInfo property, string name)
         {

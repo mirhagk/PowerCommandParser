@@ -143,7 +143,7 @@ namespace UnitTests
             Assert.AreEqual(85, settings.NumberOfTrucks);
             Assert.AreEqual(1000, settings.MaxSize);
             Assert.IsTrue(settings.IsAConvoy);
-            Assert.AreEqual(ComplexTypeSettings.ConvoyType.Big | ComplexTypeSettings.ConvoyType.Regular, settings.ConvoySize);
+            Assert.AreEqual(ComplexTypeSettings.ConvoyType.Big | ComplexTypeSettings.ConvoyType.Great, settings.ConvoySize);
             Assert.IsFalse(settings.WillPayToll);
         }
         [TestMethod]
