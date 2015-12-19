@@ -123,7 +123,7 @@ namespace UnitTests
         {
             var settings = Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-NumberOfTrucks 3 -MaxSize 10 --IsAConvoy"));
             Assert.AreEqual(3, settings.NumberOfTrucks);
-            Assert.AreEqual(10, settings.NumberOfTrucks);
+            Assert.AreEqual(10, settings.MaxSize);
             Assert.AreEqual(true, settings.IsAConvoy);
             Assert.AreEqual(ComplexTypeSettings.ConvoyType.Regular, settings.ConvoySize);
             Assert.AreEqual(true, settings.WillPayToll);
@@ -133,7 +133,7 @@ namespace UnitTests
         [TestMethod]
         public void TestComplexTypeAlt()
         {
-            var settings = Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-NumberOfTrucks 85 -MaxSize 1000 -IsAConvoy true --ConvoySize Great,Big -WillPayToll false"));
+            var settings = Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-NumberOfTrucks 85 -MaxSize 1000 -IsAConvoy true -ConvoySize Great,Big -WillPayToll false"));
             Assert.AreEqual(85, settings.NumberOfTrucks);
             Assert.AreEqual(1000, settings.MaxSize);
             Assert.IsTrue(settings.IsAConvoy);
