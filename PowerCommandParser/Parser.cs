@@ -66,11 +66,23 @@ namespace PowerCommandParser
                     else
                         return Enum.Parse(type, value);
                 }
-                else if (ImplementsInterface(type,typeof(System.Collections.IList)))
+                else if (type.IsArray)
+                {
+                    var elementType = type.GetElementType();
+                    var values = value.Split(',');
+                    var array = Array.CreateInstance(elementType, values.Length);
+                    for(int i = 0; i < values.Length; i++)
+                    {
+                        array.SetValue(GetObjectAsType(values[i], elementType), i);
+                    }
+                    return array;
+                }
+                else if (ImplementsInterface(type, typeof(System.Collections.IList)))
                 {
                     var elementType = type.GetGenericArguments()[0];
+
                     var list = Activator.CreateInstance(type) as System.Collections.IList;
-                    foreach(var item in value.Split(','))
+                    foreach (var item in value.Split(','))
                     {
                         list.Add(GetObjectAsType(item, elementType));
                     }
