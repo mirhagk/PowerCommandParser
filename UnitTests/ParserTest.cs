@@ -131,6 +131,12 @@ namespace UnitTests
             Assert.AreEqual(0, settings.TruckNames.Count);
         }
         [TestMethod]
+        public void TestEnum()
+        {
+            var settings = Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-ConvoySize Regular"));
+            Assert.AreEqual(ComplexTypeSettings.ConvoyType.Regular, settings.ConvoySize);
+        }
+        [TestMethod]
         public void TestComplexTypeAlt()
         {
             var settings = Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-NumberOfTrucks 85 -MaxSize 1000 -IsAConvoy true -ConvoySize Great,Big -WillPayToll false"));

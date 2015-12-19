@@ -34,9 +34,12 @@ namespace PowerCommandParser
             {
                 property.SetValue(obj, Convert.ChangeType(value, property.PropertyType));
             }
-            catch(InvalidCastException)
+            catch (InvalidCastException)
             {
-                throw new NotSupportedException($"{value} can't be converted to {property.PropertyType}");
+                if (property.PropertyType.IsEnum)
+                    property.SetValue(obj, Enum.Parse(property.PropertyType, value));
+                else
+                    throw new NotSupportedException($"{value} can't be converted to {property.PropertyType}");
             }
         }
         static bool MatchesArgument(PropertyInfo property, string name)
