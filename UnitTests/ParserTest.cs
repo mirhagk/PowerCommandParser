@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
+using static UnitTests.TestHelper;
 
 namespace UnitTests
 {
@@ -15,16 +16,6 @@ namespace UnitTests
         {
             public string Name { get; set; }
             public bool Activate { get; set; }
-        }
-        public string[] CmdLineEntryParser(string input)
-        {
-            var cmdLineRegex = new Regex(@"(?:[^""\s]\S*)|(?:""[^""]*"")");
-            List<string> pieces = new List<string>();
-            foreach (Match match in cmdLineRegex.Matches(input))
-            {
-                pieces.Add(match.Value);
-            }
-            return pieces.ToArray();
         }
         [TestMethod]
         public void BasicUsage()
