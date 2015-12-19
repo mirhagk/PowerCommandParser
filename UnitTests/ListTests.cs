@@ -14,7 +14,13 @@ namespace UnitTests
     {
         public class SettingsList
         {
+            public enum Fruit
+            {
+                Apple, Orange
+            }
             public List<string> StringList { get; set; }
+            public List<int> IntList { get; set; }
+            public Fruit[] Fruits { get; set; }
         }
         private void AssertEnumeration<T>(IEnumerable<T> list, params T[] values)
         {
@@ -31,6 +37,18 @@ namespace UnitTests
         {
             var settings = Parser.ParseArguments<SettingsList>(CmdLineEntryParser("-StringList a,b"));
             AssertEnumeration(settings.StringList, "a", "b");
+        }
+        [TestMethod]
+        public void IntListTest()
+        {
+            var settings = Parser.ParseArguments<SettingsList>(CmdLineEntryParser("-IntList 1,2,3"));
+            AssertEnumeration(settings.IntList, 1, 2, 3);
+        }
+        [TestMethod]
+        public void ArrayOfEnumTest()
+        {
+            var settings = Parser.ParseArguments<SettingsList>(CmdLineEntryParser("-Fruits Apple,Orange"));
+            AssertEnumeration(settings.Fruits, SettingsList.Fruit.Apple, SettingsList.Fruit.Orange);
         }
     }
 }
