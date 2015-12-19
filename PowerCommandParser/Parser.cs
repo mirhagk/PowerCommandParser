@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -37,6 +38,15 @@ namespace PowerCommandParser
             MethodInfo castMethod = typeof(Parser).GetMethods(BindingFlags.Static|BindingFlags.NonPublic).Single(f=>f.Name==nameof(Cast)).MakeGenericMethod(type);
             return castMethod.Invoke(null, new object[] { value });
         }
+        static bool ImplementsInterface(Type type, Type interfaceType)
+        {
+            Contract.Requires(interfaceType.IsInterface);
+            if (type.GetInterfaces().Any(i => i == interfaceType))
+                return true;
+            if (type.IsGenericType && type.GetGenericTypeDefinition().GetInterfaces().Any(i => i == interfaceType))
+                return true;
+            return false;
+        }
         private static object GetObjectAsType(string value, Type type)
         {
             try
@@ -55,6 +65,16 @@ namespace PowerCommandParser
                     }
                     else
                         return Enum.Parse(type, value);
+                }
+                else if (ImplementsInterface(type,typeof(System.Collections.IList)))
+                {
+                    var elementType = type.GetGenericArguments()[0];
+                    var list = Activator.CreateInstance(type) as System.Collections.IList;
+                    foreach(var item in value.Split(','))
+                    {
+                        list.Add(GetObjectAsType(item, elementType));
+                    }
+                    return list;
                 }
                 else
                     throw new NotSupportedException($"{value} can't be converted to {type}");
