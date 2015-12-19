@@ -30,10 +30,14 @@ namespace PowerCommandParser
     {
         private static void SetValue(PropertyInfo property, object obj, string value)
         {
-            if (property.PropertyType.IsAssignableFrom(typeof(string)))
-                property.SetValue(obj,value);
-            else if (property.PropertyType.IsAssignableFrom(typeof(long)))
-                property.SetValue(obj, long.Parse(value));
+            try
+            {
+                property.SetValue(obj, Convert.ChangeType(value, property.PropertyType));
+            }
+            catch(InvalidCastException)
+            {
+                throw new NotSupportedException($"{value} can't be converted to {property.PropertyType}");
+            }
         }
         static bool MatchesArgument(PropertyInfo property, string name)
         {
