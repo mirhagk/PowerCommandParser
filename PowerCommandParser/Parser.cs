@@ -136,6 +136,12 @@ namespace PowerCommandParser
                     Console.WriteLine(helpText.GetParameterHelp());
                     return null;
                 }
+                if (arg == "--version")
+                {
+                    var assembly = typeof(T).Assembly.GetName();
+                    Console.WriteLine($"{assembly.Name} {assembly.Version}");
+                    return null;
+                }
             }
 
 
