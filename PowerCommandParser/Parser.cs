@@ -127,11 +127,21 @@ namespace PowerCommandParser
                     var property = properties.SingleOrDefault(p => MatchesArgument(p, switchName));
                     if (property == null || !property.PropertyType.IsAssignableFrom(typeof(bool)))
                     {
-                        if (outputErrors)
-                            Console.Error.WriteLine($"No switch named {switchName} was found in the application");
+                        if (switchName.ToLowerInvariant() == "help")
+                        {
+                            HelpText<T> helpText = new HelpText<T>();
+                            Console.WriteLine(helpText.Name);
+                            Console.WriteLine(helpText.Synopsis);
+                            Console.WriteLine(helpText.GetSyntax());
+                            Console.WriteLine(helpText.LongDescription);
+                            Console.WriteLine(helpText.GetParameterHelp());
+                        }
+                        else if (outputErrors)
+                                Console.Error.WriteLine($"No switch named {switchName} was found in the application");
                         return null;
                     }
-                    property.SetValue(result, true);
+                    else
+                        property.SetValue(result, true);
 
                     providedArguments.Add(switchName);
                     positionalArguments.RemoveAll(r => r.Name == property.Name);
