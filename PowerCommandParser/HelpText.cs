@@ -29,8 +29,9 @@ namespace PowerCommandParser
 	{
 		public string Name { get; set; }
 		private DescriptionAttribute Description => typeof(T).GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute;
-		public string Synopsis => Description.Summary;
-		public string LongDescription => Description.Text; 
+        public string ProgramName => typeof(T).Assembly.GetName().Name;
+        public string Synopsis => Description?.Summary ?? ProgramName;
+		public string LongDescription => Description?.Text; 
 		private IEnumerable<PropertyInfo> OrderedProperties => typeof(T).GetProperties().OrderBy(p=>p.GetCustomAttributes().Min(a=>(a as PositionAttribute)?.Position) ?? int.MaxValue); 
 		public string GetSyntax()
 		{
