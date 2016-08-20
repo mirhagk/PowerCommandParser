@@ -16,10 +16,10 @@ namespace UnitTests
             public int Value { get; set; }
             public string Name { get; set; }
         }
-        [PowerCommandParser.Description("Sample usage of help attributes")]
+        [PowerCommandParser.Description("Sample usage of help attributes", "Detailed class information")]
         public class ClassWithHelp
         {
-            [PowerCommandParser.Description("A name to use")]
+            [PowerCommandParser.Description("A name to use","Detailed Information")]
             public string Name { get; set; }
             public int Value { get; set; }
             [Required]
@@ -88,6 +88,14 @@ namespace UnitTests
             Assert.IsTrue(output.Contains("[PositionalAndRequired] System.Single"));
             Assert.IsFalse(output.Contains("[[PositionalAndRequired] System.Single]"));
             Assert.IsTrue(output.IndexOf("[[Positional] System.Int32]") < output.IndexOf("[PositionalAndRequired] System.Single"));
+        }
+        public void ShowsDetailedDescription()
+        {
+            string output;
+            var result = TestHelper.ParseArguments<ClassWithHelp>("--help", out output);
+
+            Assert.IsTrue(output.Contains("Detailed class information"));
+            Assert.IsTrue(output.Contains("Detailed information"));
         }
     }
 }
