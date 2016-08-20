@@ -79,8 +79,7 @@ namespace UnitTests
         {
             string output;
             var result = TestHelper.ParseArguments<ClassWithHelp>("--help", out output);
-
-            //Assert.IsTrue(output.Contains("UnitTests.exe"));
+            
             Assert.IsTrue(output.Contains("[Name System.String]"));
             Assert.IsTrue(output.Contains("[Value System.Int32]"));
             Assert.IsTrue(output.Contains("Required System.String"));
