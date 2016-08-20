@@ -34,6 +34,7 @@ namespace UnitTests
             Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-name \"nathan jervis")));
             Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("-firstname --activate")));
             Assert.IsNull(Parser.ParseArguments<BasicUsageOptions>(CmdLineEntryParser("--name --activate")));
+            Assert.IsNull(Parser.ParseArguments<ComplexTypeSettings>(CmdLineEntryParser("-maxsize dw --activate")));
         }
         class FormatExportOptions
         {

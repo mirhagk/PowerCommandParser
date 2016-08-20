@@ -53,7 +53,10 @@ namespace PowerCommandParser
             {
                 return Convert.ChangeType(value, type);
             }
-            catch (InvalidCastException)
+            catch (Exception ex) 
+            when (ex is OverflowException 
+                || ex is FormatException 
+                || ex is InvalidCastException)
             {
                 if (type.IsEnum)
                 {
@@ -119,6 +122,23 @@ namespace PowerCommandParser
                 .ToList();
 
             var requiredArguments = properties.Where(p => p.GetCustomAttributes(false).Any(a => a is RequiredAttribute)).ToList();
+
+            //Check for help or version switches
+            foreach(var arg in args.Select(a=>a.ToLowerInvariant()))
+            {
+                if (arg == "--help")
+                {
+                    HelpText<T> helpText = new HelpText<T>();
+                    Console.WriteLine(helpText.Name);
+                    Console.WriteLine(helpText.Synopsis);
+                    Console.WriteLine(helpText.GetSyntax());
+                    Console.WriteLine(helpText.LongDescription);
+                    Console.WriteLine(helpText.GetParameterHelp());
+                    return null;
+                }
+            }
+
+
             for(int i = 0; i < args.Length; i++)
             {
                 if (args[i].StartsWith("--"))
@@ -128,10 +148,11 @@ namespace PowerCommandParser
                     if (property == null || !property.PropertyType.IsAssignableFrom(typeof(bool)))
                     {
                         if (outputErrors)
-                            Console.Error.WriteLine($"No switch named {switchName} was found in the application");
+                                Console.Error.WriteLine($"No switch named {switchName} was found in the application");
                         return null;
                     }
-                    property.SetValue(result, true);
+                    else
+                        property.SetValue(result, true);
 
                     providedArguments.Add(switchName);
                     positionalArguments.RemoveAll(r => r.Name == property.Name);
@@ -152,7 +173,17 @@ namespace PowerCommandParser
                             Console.Error.WriteLine($"No argument named {paramName} was found in the application");
                         return null;
                     }
-                    SetValue(property, result, args[++i]);
+                    try
+                    {
+                        SetValue(property, result, args[++i]);
+
+                    }
+                    catch (NotSupportedException ex)
+                    {
+                        if (outputErrors)
+                            Console.Error.WriteLine(ex.Message);
+                        return null;
+                    }
 
                     providedArguments.Add(paramName);
                     positionalArguments.RemoveAll(r => r.Name == property.Name);
