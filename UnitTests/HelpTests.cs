@@ -23,15 +23,29 @@ namespace UnitTests
         [TestMethod]
         public void HelpDetected()
         {
-            var oldOut = Console.Out;
-            var stringWriter = new System.IO.StringWriter();
-            Console.SetOut(stringWriter);
-            var result = PowerCommandParser.Parser.ParseArguments<NormalNoHelp>(TestHelper.CmdLineEntryParser("--help"));
-            Console.Out.Flush();
-            Console.SetOut(oldOut);
+            string output;
+            var result = TestHelper.ParseArguments<NormalNoHelp>("--help", out output);
 
             Assert.IsNull(result);
-            Assert.IsFalse(stringWriter.ToString().Contains("No switch named "));
+            Assert.IsFalse(output.Contains("No switch named "));
+        }
+        [TestMethod]
+        public void DoesntParseArguments()
+        {
+            string output;
+            var result = TestHelper.ParseArguments<NormalNoHelp>("-Value one --help -NameSpeltWrong", out output);
+
+            Assert.IsNull(result);
+            Assert.IsFalse(output.Contains("No switch named "));
+            Assert.IsFalse(output.Contains("The value specified for"));
+        }
+        [TestMethod]
+        public void HelpDefaultsToProgramName()
+        {
+            string output;
+            var result = TestHelper.ParseArguments<NormalNoHelp>("--help", out output);
+
+            Assert.IsTrue(output.Contains("UnitTests"));
         }
     }
 }
