@@ -24,7 +24,7 @@ namespace UnitTests
             var oldOut = Console.Out;
             var stringWriter = new System.IO.StringWriter();
             Console.SetOut(stringWriter);
-            var result = PowerCommandParser.Parser.ParseArguments<T>(TestHelper.CmdLineEntryParser("--help"));
+            var result = PowerCommandParser.Parser.ParseArguments<T>(TestHelper.CmdLineEntryParser(input));
             Console.Out.Flush();
             Console.SetOut(oldOut);
             output = stringWriter.ToString();
