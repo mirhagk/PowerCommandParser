@@ -13,7 +13,7 @@ var settings = Parser.ParseArguments<Settings>(args);
 
 
 Installation
----
+===
 
 You can install this library using `nuget`
 
@@ -22,9 +22,9 @@ Install-Package PowerCommandParser
 ```
 
 Use
----
+===
 
-To use the library first design a POCO ("normal") class that defines all your settings
+To use the library first design a C# class that defines all your settings. The library is designed to work with normal classes (POCOs), so any class will do.
 
 ```
 class Settings
@@ -77,25 +77,31 @@ namespace Example
 ```
 
 Notes
----
+===
 
 + The parser only looks at public properties. If you require something different please submit an issue so it can be discussed
 + The names are case insensitive (just like powershell)
 + To use default arguments simply assign the default values in the constructor (or just inline).
 
+Enums
+===
+
+Enums are supported, both flag enums and regular enums. Enums will be matched by name, and flag enums can be specified by separating them with a comma.
+
 Switches
---- 
+===
 
 As well as parameters `-Name Value` you can also use switches `--enabled`. Switches are defined in code as simply booleans. Once you have a boolean you can use it as either `--enabled` or `-enabled true`/`-enabled false`
 
 Advanced Usage
----
+===
 
 Besides just the very simple usage, the library also supports some additional features, such as specifying arguments as required, and using positional arguments.
 
-###Required
+Required
+---
 
-A required argument is simply marked with the `[Required]` attribute like so
+A required argument is marked with the `[Required]` attribute like so
 
 ```
 class Settings
@@ -108,11 +114,12 @@ class Settings
 }
 ```
 
-The library will make sure the marked fields are set
+The library will make sure the marked fields are set and give the user errors if they aren't.
 
-###Position
+Position
+---
 
-To use positional arguments (like `myapp.exe input.txt output.txt`) simply use the `[Position(number)]` attribute
+To use positional arguments (like `myapp.exe input.txt output.txt`) use the `[Position(number)]` attribute. Arguments passed without any names will be assigned to positional arguments. E.g. `-Input myfile.txt -Output myfile.html -Format html` and `myfile.txt myfile.html -format html` and `-format html myfile.txt myfile.html` are all equivalent.
 
 ```
 class Settings
