@@ -133,3 +133,25 @@ class Settings
 	public string Format{get;set;}
 }
 ```
+
+AlternateName
+---
+
+The `AlternateName` attribute lets you specify alternate names for an argument. So for example
+
+```
+class Settings
+{
+	[AlternateName("filename")]
+	public string OutputFilename{get;set;}
+}
+```
+
+Would mean that `-filename myfile.txt` and `-outputFilename myfile.txt` are both the same.
+
+Description
+---
+
+The `Description` attribute is for specifying a human-readable description. This is used in generating the response for `--help`, it's strongly recommended that you specify these.
+
+You can apply it to the class and specify both a summary and a longer description (`text`), and you can apply it to individual properties to provide a summary for those arguments.
