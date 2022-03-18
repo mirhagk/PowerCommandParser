@@ -41,7 +41,7 @@ Call the `Parser.ParseArguments` generic method using the class as the type argu
 var settings = Parser.ParseArguments<Settings>(args);
 ```
 
-If any errors occur the method will print the errors to the standard error screen and return null. So simply check for null, and exit the program if it's null
+If any errors occur the method will print the errors to the standard error screen and return null. So check for null, and exit the program if it's null
 
 ```
 if (settings == null) return;
@@ -81,17 +81,17 @@ Notes
 
 + The parser only looks at public properties. If you require something different please submit an issue so it can be discussed
 + The names are case insensitive (just like powershell)
-+ To use default arguments simply assign the default values in the constructor (or just inline).
++ To use default arguments assign the default values in the constructor (or just inline).
 
 Enums
 ===
 
-Enums are supported, both flag enums and regular enums. Enums will be matched by name, and flag enums can be specified by separating them with a comma.
+Enums are supported, both flag enums and regular enums. Enums will be matched by name, and flag enums can be specified by separating them with a comma. If an enum isn't marked as required, then the default value will be 0, so using `Unspecified` as the first enum value is useful.
 
 Switches
 ===
 
-As well as parameters `-Name Value` you can also use switches `--enabled`. Switches are defined in code as simply booleans. Once you have a boolean you can use it as either `--enabled` or `-enabled true`/`-enabled false`
+As well as parameters `-Name Value` you can also use switches `--enabled`. Switches are defined in code as booleans. Once you have a boolean you can use it as either `--enabled` or `-enabled true`/`-enabled false`
 
 Advanced Usage
 ===
