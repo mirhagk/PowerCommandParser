@@ -86,7 +86,7 @@ Notes
 Enums
 ===
 
-Enums are supported, both flag enums and regular enums. Enums will be matched by name, and flag enums can be specified by separating them with a comma. If an enum isn't marked as required, then the default value will be 0, so using `Unspecified` as the first enum value is useful.
+Enums are supported, both flag enums and regular enums. Enums will be matched by name, and flag enums can be specified by separating them with a comma. If an enum isn't marked as required, then the default value will be 0, so using `Unspecified` as the first enum value is useful. Currently enums are case sensitive, but this is a bug and should be case insensitive in future versions.
 
 Switches
 ===
